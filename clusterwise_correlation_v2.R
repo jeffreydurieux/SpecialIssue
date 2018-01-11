@@ -6,10 +6,14 @@
 library(ica)
 library(CICA)
 
-S <- replicate()
+S <- replicate(n = 4, expr = icasamp("b","rnd",1000))
 
-clusterwise_correlation_v2 <- function(m1,m2,weight){
-  
-  
+clusterwise_correlation_v2 <- function(m1,weight){
+  E <- addError(datablock = m1, error = 0.05,type = "Gaussian", additiontype = 1)  
+  res <- m1 + (weight * E)
   return(res)
 }
+
+test <- clusterwise_correlation_v2(S, 2)
+
+congru(S,test)
