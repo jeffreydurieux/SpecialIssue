@@ -47,13 +47,11 @@ clusterwise_correlation <- function(nclusters, covariance, sig, samples=1000){
 }
 
 
-covariance <- matrix(c(1,.7,.7,.7,
-                       .7,1.,.7,.7,
-                       .7,.7,1,.7,
-                       .7,.7,.7,1), nrow = 4)
+covariance <- matrix(data = .95, nrow = 5, ncol = 5)
+diag(covariance) <- 1
 covariance
 
-test <- clusterwise_correlation(nclusters = 4,covariance = covariance,sig = 5, samples = 1000)
+test <- clusterwise_correlation(nclusters = 5,covariance = covariance,sig = 20, samples = 1000)
 
 # check correlation
 diag(cor(test$SignalList[[1]] , test$SignalList[[2]]) )
