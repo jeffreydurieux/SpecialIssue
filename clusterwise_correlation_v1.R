@@ -4,7 +4,7 @@
 
 library(ica)
 
-clusterwise_correlation <- function(nclusters, covariance, sig, samples=1000){
+clusterwise_correlation <- function(nclusters, covariance, sig, samples=1000, type="b"){
   
   if(dim(covariance)[1] != nclusters){
     stop("stop: number of clusters should equal row or col dim of covariance matrix")
@@ -19,7 +19,12 @@ clusterwise_correlation <- function(nclusters, covariance, sig, samples=1000){
   signalsL <- list()
   for(i in 1:sig){
     
-    signals <- replicate(nclusters, icasamp("b","rnd", samples))
+    if(type == "b"){
+      signals <- replicate(nclusters, icasamp("b","rnd", samples))  
+    }else{
+      signals <- replicate(nclusters, rnorm(samples))
+    }
+    
     
     signalsL[[i]] <- signals %*% R
   }
