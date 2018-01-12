@@ -268,6 +268,19 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
     
   }# end if gauss == 0 
   
+  # P partitioning vector
+  
+  if(n_clusters == 2 & c_size == "unequal"){
+    P <- c(rep(1,45), rep(2,15))
+  }else if(n_clusters == 2 & c_size == "equal"){
+    P <- c(rep(1,30), rep(2,30))
+  }else if(n_clusters == 4 & c_size == "unequal"){
+    P <- c(rep(1,20), rep(2,20), rep(3,10), rep(4,10))
+  }else if(n_clusters == 4 & c_size == "equal"){
+    P <- c(rep(1,15), rep(2,15), rep(3,15), rep(4,15))
+  }
+  
+  
   Xe <- lapply(X, FUN = addError, error = error, type = "Gaussian", 
               additiontype = 1)
   
@@ -277,6 +290,7 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
   res$S <- S
   res$X <- X
   res$Xe <- Xe
+  res$P <- P
   return(res)
 }
 
