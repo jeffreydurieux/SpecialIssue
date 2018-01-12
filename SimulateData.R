@@ -1,7 +1,7 @@
 # Thu Jan 11 14:47:02 2018 ------------------------------
 # generate data script
 
-<<<<<<< HEAD
+
 ###### generate signals S ########
 
 Sim_Signals <- function(n_signals, samples, type = c("b","gauss")){
@@ -15,8 +15,7 @@ Sim_Signals <- function(n_signals, samples, type = c("b","gauss")){
   return(res)
 }
 
-=======
->>>>>>> development
+
 ###### generate time courses A #######
 
 Sim_A <- function(nscan, n_signals){
@@ -34,8 +33,6 @@ Sim_A <- function(nscan, n_signals){
   return(TS)
 }
 
-<<<<<<< HEAD
-=======
 
 ########### mix data #############
 
@@ -283,7 +280,14 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
   return(res)
 }
 
-
-
-
->>>>>>> development
+# test <- Sim_X(n_clusters = 4,c_size = "equal",n_signals = 10,gauss = 0,error = 0.05,correlation = .7)
+# 
+# diag(congru(test$S[[1]], test$S[[2]]))
+# 
+# diag(congru(test$S[[1]], test$S[[2]]))
+# diag(congru(test$S[[1]], test$S[[3]]))
+# diag(congru(test$S[[1]], test$S[[4]]))
+# diag(congru(test$S[[2]], test$S[[3]]))
+# diag(congru(test$S[[2]], test$S[[4]]))
+# diag(congru(test$S[[3]], test$S[[4]]))
+# 
