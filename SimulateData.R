@@ -52,6 +52,10 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       
       Al1 <- replicate(30,A[[1]], simplify = FALSE)
       Al2 <- replicate(30,A[[2]], simplify = FALSE)
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       
       Sa <- clusterwise_correlation(nclusters = 2,covariance = covariance
@@ -75,6 +79,10 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       A <- c(A1,A2)
       Al1 <- replicate(45,A[[1]], simplify = FALSE)
       Al2 <- replicate(15,A[[2]], simplify = FALSE)
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       Sa <- clusterwise_correlation(nclusters = 2,covariance = covariance
                                     ,sig = n_signals/2,samples = 2000, type = "b")
@@ -103,6 +111,15 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       Al2 <- replicate(15,A[[2]], simplify = FALSE)
       Al3 <- replicate(15,A[[3]], simplify = FALSE)
       Al4 <- replicate(15,A[[4]], simplify = FALSE)
+      
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al3 <- lapply(Al3, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al4 <- lapply(Al4, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       
       Sa <- clusterwise_correlation(nclusters = 4,covariance = covariance
@@ -136,6 +153,15 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       Al2 <- replicate(20,A[[2]], simplify = FALSE)
       Al3 <- replicate(10,A[[3]], simplify = FALSE)
       Al4 <- replicate(10,A[[4]], simplify = FALSE)
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al3 <- lapply(Al3, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al4 <- lapply(Al4, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      
       
       
       Sa <- clusterwise_correlation(nclusters = 4,covariance = covariance
@@ -167,7 +193,10 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       A <- c(A1,A2)
       Al1 <- replicate(30,A[[1]], simplify = FALSE)
       Al2 <- replicate(30,A[[2]], simplify = FALSE)
-      
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       
       Sa <- clusterwise_correlation(nclusters = 2,covariance = covariance
@@ -190,6 +219,10 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       A <- c(A1,A2)
       Al1 <- replicate(45,A[[1]], simplify = FALSE)
       Al2 <- replicate(15,A[[2]], simplify = FALSE)
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       Sa <- clusterwise_correlation(nclusters = 2,covariance = covariance
                                     ,sig = n_signals,samples = 2000, type = "b")
@@ -217,6 +250,14 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       Al2 <- replicate(15,A[[2]], simplify = FALSE)
       Al3 <- replicate(15,A[[3]], simplify = FALSE)
       Al4 <- replicate(15,A[[4]], simplify = FALSE)
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al3 <- lapply(Al3, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al4 <- lapply(Al4, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       Sa <- clusterwise_correlation(nclusters = 4,covariance = covariance
                                     ,sig = n_signals,samples = 2000, type = "b")
@@ -248,6 +289,14 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
       Al2 <- replicate(20,A[[2]], simplify = FALSE)
       Al3 <- replicate(10,A[[3]], simplify = FALSE)
       Al4 <- replicate(10,A[[4]], simplify = FALSE)
+      Al1 <- lapply(Al1, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al2 <- lapply(Al2, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al3 <- lapply(Al3, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
+      Al4 <- lapply(Al4, FUN = addError, error = 0.5, type = "Gaussian", 
+                    additiontype = 1)
       
       Sa <- clusterwise_correlation(nclusters = 4,covariance = covariance
                                     ,sig = n_signals,samples = 2000, type = "b")
