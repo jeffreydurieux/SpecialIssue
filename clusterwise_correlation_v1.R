@@ -52,21 +52,21 @@ clusterwise_correlation <- function(nclusters, covariance, sig, samples=1000, ty
 }
 
 
-covariance <- matrix(data = .95, nrow = 5, ncol = 5)
-diag(covariance) <- 1
-covariance
+#covariance <- matrix(data = .95, nrow = 5, ncol = 5)
+#diag(covariance) <- 1
+#covariance
 
-test <- clusterwise_correlation(nclusters = 5,covariance = covariance,sig = 20, samples = 1000)
+#test <- clusterwise_correlation(nclusters = 5,covariance = covariance,sig = 20, samples = 1000)
 
 # check correlation
-diag(cor(test$SignalList[[1]] , test$SignalList[[2]]) )
-diag(cor(test$SignalList[[1]] , test$SignalList[[3]]) )
-diag(cor(test$SignalList[[1]] , test$SignalList[[4]]) )
+#diag(cor(test$SignalList[[1]] , test$SignalList[[2]]) )
+#diag(cor(test$SignalList[[1]] , test$SignalList[[3]]) )
+#diag(cor(test$SignalList[[1]] , test$SignalList[[4]]) )
 
-diag(cor(test$SignalList[[2]] , test$SignalList[[3]]) )
+#diag(cor(test$SignalList[[2]] , test$SignalList[[3]]) )
 
 
-library(MatrixCorrelation)
+#library(MatrixCorrelation)
 
-RV2(test$SignalList[[1]], test$SignalList[[2]])
-RV2(test$SignalList[[2]], test$SignalList[[3]])
+#RV2(test$SignalList[[1]], test$SignalList[[2]])
+#RV2(test$SignalList[[2]], test$SignalList[[3]])

@@ -1,6 +1,11 @@
 # simulation script for special issue
 # Thu Jan 11 14:13:29 2018 ------------------------------
 
+args <- commandArgs(trailingOnly = TRUE)
+args <- as.numeric(args)
+
+replication <- args[1]
+
 library(ica)
 library(MatrixCorrelation)
 library(mclust)
@@ -11,7 +16,7 @@ library(CICA)
 source(file = "SimulateData.R")
 source(file = "clusterwise_correlation_v1.R")
 
-
+set.seed(replication)
 
 ############ notes ################
 
@@ -28,8 +33,8 @@ ncomp <- c(10,5,15)
 design <- expand.grid(n_clusters=n_clusters, c_size = c_size,
                       gauss = gauss, correlation = correlation,error = error, weight=weight, ncomp=ncomp)
 
-
-for(sim in 1:24){
+Des <- list()
+for(sim in 1:432){
   # generate data
   data <- do.call(Sim_X, args = as.list(design[sim,1:5]) )
   
@@ -162,13 +167,36 @@ for(sim in 1:24){
       apply(abs(congru(data$S[[i]],icaL[[idx[x]]]$S)),2,max))
   }
   
+  conAmean <- sapply(conA, function(x) mean(x))
+  conAsd <- sapply(conA, function(x) sd(x))
   
+  conSmean <- numeric()
+  conSsd <- numeric()
+  for(i in 1:length(conS)){
+    conSmean[i] <- mean(sapply(conS[[i]], function(x) mean(x)) )
+    conSsd[i] <- mean(sapply(conS[[i]], function(x) sd(x)) )
+  }
   
+  # add to design frame
+  Des[[sim]] <- c(design[sim,], ARI, "meanConA" =mean(conAmean), 
+                 "meansdConA" = mean(conAsd),
+                 "meanConS" = mean(conSmean), "meansdConS" = mean(conAsd)) 
 }
 
 # save stuff on export
 setwd("/exports/fsw/durieuxj/")
 # Write output, also possible to first save everything in a list object
 
-sapply(conA, function(x) mean(x))
-sapply(conS[[2]], function(x) mean(x))
+Results <- do.call(rbind, lapply(Des, data.frame, stringsAsFactors=FALSE))
+save(Results, file = paste("Replication_", replication, ".Rdata", sep=""))
+
+
+
+# cmdscale
+#ordin <- cmdscale(d = DISSIMMAT,k = 3)
+#plot(ordin, col=apq0.1lab, asp=T)
+#plot(ordin, col=apq0.5lab,asp=T)
+#plot(ordin, col=pam$clustering,asp=T)
+#points(ordin[pam$medoids[1],][1], ordin[pam$medoids[1],][2], pch=4, cex=4)
+#points(ordin[pam$medoids[2],][1], ordin[pam$medoids[2],][2], pch=4, cex=4)
+
