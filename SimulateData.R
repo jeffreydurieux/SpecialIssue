@@ -335,6 +335,12 @@ Sim_X <- function(n_clusters=2, c_size="equal", n_signals = 10, gauss=0, error=0
   
   
   res <- list()
+  
+  if(n_clusters == 4){
+    A <-c(Al1,Al2,Al3,Al4)
+  }else{
+    A <- c(Al1,Al2)
+  }
   res$A <- A
   res$S <- S
   res$X <- X

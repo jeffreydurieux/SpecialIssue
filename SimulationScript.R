@@ -23,9 +23,10 @@ gauss <- c(1,0)
 correlation <- c(0.8, 0.3)
 error <- c(0.05, 0.50, 0.80)
 weight <- c("equal","S","A")
+ncomp <- c(10,5,15)
 
 design <- expand.grid(n_clusters=n_clusters, c_size = c_size,
-                      gauss = gauss, correlation = correlation,error = error, weight=weight)
+                      gauss = gauss, correlation = correlation,error = error, weight=weight, ncomp=ncomp)
 
 
 for(sim in 1:24){
@@ -34,7 +35,7 @@ for(sim in 1:24){
   
   # single subject ica
   time_icafast <- proc.time()
-  icaL <- lapply(data$Xe, FUN = icafast, nc = 2)
+  icaL <- lapply(data$Xe, FUN = icafast, nc = design$ncomp[sim])
   time_icafast <- proc.time() - time_icafast
   
   # compute RV
@@ -149,13 +150,25 @@ for(sim in 1:24){
   TIME$ica <- time_icafast
   
   # congru A
-  #apply(abs(congru(data$S[[1]],icaL[[1]]$S)),2,max)
+  conA <- lapply(1:length(data$A), function(x) 
+    apply(abs(congru(data$A[[x]],icaL[[x]]$M)),2,max))
   
   # congru S
   #apply(abs(congru(data$S[[1]],icaL[[1]]$S)),2,max)
+  conS <- list()
+  for(i in 1:length(data$S)){
+    idx <- which(data$P==i)
+    conS[[i]] <- lapply(seq_along(idx), function(x) 
+      apply(abs(congru(data$S[[i]],icaL[[idx[x]]]$S)),2,max))
+  }
+  
+  
+  
 }
 
 # save stuff on export
 setwd("/exports/fsw/durieuxj/")
 # Write output, also possible to first save everything in a list object
 
+sapply(conA, function(x) mean(x))
+sapply(conS[[2]], function(x) mean(x))
