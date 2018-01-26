@@ -129,7 +129,7 @@ for(sim in 1:36){
   time_apqk <- proc.time()
   apqk <- tryCatch( apclusterK(s = SIMMAT, K= design$n_clusters[sim], verbose =F), warning = function(w)
     return(list(apclusterK(s=SIMMAT, K= design$n_clusters[sim],verbose =F),w)))
-  time_apqk <- proc.time() - time_qpqk
+  time_apqk <- proc.time() - time_apqk
     
   if(length(apqk) == 2 ){
     apqklab <- 1:60
