@@ -24,23 +24,20 @@ set.seed(replication)
 
 n_clusters <- c(2,4)
 c_size <- c("equal", "unequal")
-gauss <- c(1,0)
-correlation <- c(0.8, 0.3)
-error <- c(0.05, 0.50, 0.80)
-weight <- c("equal","S","A")
-ncomp <- c(10,5,15)
+con <- c(.15, .4, 1)
+error <- c(0.1, 0.50, 0.90)
 
-design <- expand.grid(n_clusters=n_clusters, c_size = c_size,
-                      gauss = gauss, correlation = correlation,error = error, weight=weight, ncomp=ncomp)
+design <- expand.grid(n_clusters = n_clusters, c_size = c_size,
+                      con = con, error = error)
 
 Des <- list()
-for(sim in 1:432){
+for(sim in 1:36){
   # generate data
-  data <- do.call(Sim_X, args = as.list(design[sim,1:5]) )
+  data <- do.call(SimData, args = as.list(design[sim,]) )
   
   # single subject ica
   time_icafast <- proc.time()
-  icaL <- lapply(data$Xe, FUN = icafast, nc = design$ncomp[sim])
+  icaL <- lapply(data$Xe, FUN = icafast, nc = 20)
   time_icafast <- proc.time() - time_icafast
   
   # compute RV
@@ -86,36 +83,66 @@ for(sim in 1:432){
   
   
   # weighted sim matrix
-  if(design$weight[sim] == 'equal'){
-    SIMMAT <- (RVsM + RVsS) / 2
-  }else if(design$weight[sim] == 'S'){
-    SIMMAT <- (RVsM * .1) + (RVsS * .9)
-  }else{
-    SIMMAT <- (RVsM * .9) + (RVsS * .1)
-  }
-  
+  SIMMAT <- (RVsM + RVsS) / 2
+ 
   DISSIMMAT <- as.dist(1 - SIMMAT)
   
   # analyze data affinity propagation
   time_apq0.5 <- proc.time()
-  apq0.5 <- apcluster(s = SIMMAT)
+  apq0.5 <- tryCatch( apcluster(s = SIMMAT), warning = function(w)
+                     return(list(apcluster(s=SIMMAT),w)))
   time_apq0.5 <- proc.time() - time_apq0.5
   
-  apq0.5lab <- 1:60
-  for(i in 1:length(apq0.5@clusters)){
-    apq0.5lab <- replace(apq0.5lab, apq0.5@clusters[[i]], i)  
+  if(length(apq0.5) == 2 ){
+    apq0.5lab <- 1:60
+    for(i in 1:length(apq0.5[[1]]@clusters)){
+      apq0.5lab <- replace(apq0.5lab, apq0.5[[1]]@clusters[[i]], i)  
+    }
+  }else{
+    apq0.5lab <- 1:60
+    for(i in 1:length(apq0.5@clusters)){
+      apq0.5lab <- replace(apq0.5lab, apq0.5@clusters[[i]], i)  
+    }
   }
+  
+    
   
   
   time_apq0.1 <- proc.time()
-  apq0.1 <- apcluster(s = SIMMAT, q = 0.1)
+  apq0.1 <- tryCatch( apcluster(s = SIMMAT, q = 0.1), warning = function(w)
+    return(list(apcluster(s=SIMMAT, q = 0.1),w)))
   time_apq0.1 <- proc.time() - time_apq0.1
   
-  apq0.1lab <- 1:60
-  for(i in 1:length(apq0.1@clusters)){
-    apq0.1lab <- replace(apq0.1lab, apq0.1@clusters[[i]], i)  
+  
+  if(length(apq0.1) == 2 ){
+    apq0.1lab <- 1:60
+    for(i in 1:length(apq0.1[[1]]@clusters)){
+      apq0.1lab <- replace(apq0.1lab, apq0.1[[1]]@clusters[[i]], i)  
+    }
+  }else{
+    apq0.1lab <- 1:60
+    for(i in 1:length(apq0.1@clusters)){
+      apq0.1lab <- replace(apq0.1lab, apq0.1@clusters[[i]], i)  
+    }
   }
   
+  time_apqk <- proc.time()
+  apqk <- tryCatch( apclusterK(s = SIMMAT, K= design$n_clusters[sim], verbose =F), warning = function(w)
+    return(list(apclusterK(s=SIMMAT, K= design$n_clusters[sim],verbose =F),w)))
+  time_apqk <- proc.time() - time_qpqk
+    
+  if(length(apqk) == 2 ){
+    apqklab <- 1:60
+    for(i in 1:length(apqk[[1]]@clusters)){
+      apqklab <- replace(apqklab, apqk[[1]]@clusters[[i]], i)  
+    }
+  }else{
+    apqklab <- 1:60
+    for(i in 1:length(apqk@clusters)){
+      apqklab <- replace(apqklab, apqk@clusters[[i]], i)  
+    }
+  }
+    
   # pam
   time_pam <- proc.time()
   pam <- pam(DISSIMMAT, k = design$n_clusters[sim])
@@ -136,6 +163,7 @@ for(sim in 1:432){
   ARI <- list()
   ARI$ARIap0.5 <- adjustedRandIndex(data$P, apq0.5lab)
   ARI$ARIap0.1 <- adjustedRandIndex(data$P, apq0.1lab)
+  ARI$ARIapk <- adjustedRandIndex(data$P, apqklab)
   ARI$ARIpam <- adjustedRandIndex(data$P, pam$clustering)
   ARI$ARIhclustcomp <- adjustedRandIndex(data$P, hclust_comp_lab)
   ARI$ARIhclustward <- adjustedRandIndex(data$P, hclust_ward_lab)
@@ -147,6 +175,7 @@ for(sim in 1:432){
   TIME <- list()
   TIME$apq0.1 <- time_apq0.1
   TIME$apq0.5 <- time_apq0.5
+  TIME$apqk <- time_apqk
   TIME$hclustcomp <- time_hclustcomp
   TIME$hclustward <- time_hclustward
   TIME$pam <- time_pam
@@ -155,8 +184,9 @@ for(sim in 1:432){
   TIME$ica <- time_icafast
   
   # congru A
-  conA <- lapply(1:length(data$A), function(x) 
-    apply(abs(congru(data$A[[x]],icaL[[x]]$M)),2,max))
+  A <- unlist(data$A, recursive = F)
+  conA <- lapply(1:length(A), function(x) 
+    apply(abs(congru(A[[x]],icaL[[x]]$M)),2,max))
   
   # congru S
   #apply(abs(congru(data$S[[1]],icaL[[1]]$S)),2,max)
@@ -183,6 +213,8 @@ for(sim in 1:432){
                  "meanConS" = mean(conSmean), "meansdConS" = mean(conAsd)) 
 }
 
+
+
 # save stuff on export
 setwd("/exports/fsw/durieuxj/")
 # Write output, also possible to first save everything in a list object
@@ -193,10 +225,10 @@ save(Results, file = paste("Replication_", replication, ".Rdata", sep=""))
 
 
 # cmdscale
-#ordin <- cmdscale(d = DISSIMMAT,k = 3)
-#plot(ordin, col=apq0.1lab, asp=T)
-#plot(ordin, col=apq0.5lab,asp=T)
-#plot(ordin, col=pam$clustering,asp=T)
-#points(ordin[pam$medoids[1],][1], ordin[pam$medoids[1],][2], pch=4, cex=4)
-#points(ordin[pam$medoids[2],][1], ordin[pam$medoids[2],][2], pch=4, cex=4)
+# ordin <- cmdscale(d = DISSIMMAT,k = 2)
+# plot(ordin, col=apq0.1lab, asp=T)
+# plot(ordin, col=apq0.5lab,asp=T)
+# plot(ordin, col=pam$clustering,asp=T)
+# points(ordin[pam$medoids[1],][1], ordin[pam$medoids[1],][2], pch=4, cex=4)
+# points(ordin[pam$medoids[2],][1], ordin[pam$medoids[2],][2], pch=4, cex=4)
 
